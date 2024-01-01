@@ -1,28 +1,27 @@
 [project]
-name = "PLACEHOLDER"
-description = "PLACEHOLDER"
+name = "music"
+description = ""
 readme = "README.md"
 authors = [
-    {name = "PLACEHOLDER", email = "PLACEHOLDER@cuberg.net"},
+    {name = "Kyle McEntush", email = "kdmcentush@gmail.com"},
 ]
 dynamic = ["version"]
 dependencies = [
-#    "package==1.2.3",
-#    "private-package @ git+https://github.com/organization/repository.git@branch_or_tag"
+    "spotipy==2.22.1",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "mypy==1.7.1",
+    "mypy==1.8.0",
     "nbstripout==0.6.1",
     "pre-commit==3.6.0",
-    "pytest==7.4.3",
+    "pytest==7.4.4",
     "pytest-cov==4.1.0",
-    "ruff==0.1.8",
+    "ruff==0.1.9",
 ]
 
 [tool.setuptools.dynamic]
-version = {attr = "PLACEHOLDER.__version__"}
+version = {attr = "music.__version__"}
 
 [tool.ruff]
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
@@ -88,9 +87,6 @@ target-version = "py310"
 [tool.ruff.lint.flake8-type-checking]
 quote-annotations = true
 
-[tool.mypy]
-disable_error_code = "type-var"
-
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
 exclude_also = [
@@ -110,9 +106,3 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
     ]
 ignore_errors = true
-
-[tool.coverage.run]
-omit = [
-    # Workflows are not tested
-    "*/workflows/*"
-]

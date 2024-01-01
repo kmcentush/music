@@ -18,8 +18,8 @@ repos:
       - id: mypy
         args:
           - '--install-types'
-          - '--non-interactive'
           - '--ignore-missing-imports'
+          - '--non-interactive'
         files: .
         language_version: python3.10
   - repo: https://github.com/kynan/nbstripout

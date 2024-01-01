@@ -13,13 +13,13 @@ dev_install:
 format:
 	ruff format .
 	ruff check . --fix
-	mypy . --ignore-missing-imports
+	mypy . --install-types --ignore-missing-imports
 
 .PHONY: test_format
 test_format:
 	ruff format . --check
 	ruff check .
-	mypy . --ignore-missing-imports
+	mypy . --install-types --ignore-missing-imports
 
 .PHONY: pytest
 pytest:

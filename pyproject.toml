@@ -8,6 +8,7 @@ authors = [
 dynamic = ["version"]
 dependencies = [
     "spotipy==2.22.1",
+    "sqlmodel==0.0.14",
 ]
 
 [project.optional-dependencies]
@@ -76,7 +77,7 @@ ignore = [
     "PLR0915",
     # magic value used in comparison,
     "PLR2004",
-    # do not use mutable data structures for argument defaults
+    # do not use mutable models structures for argument defaults
     "B006",
     # recommended by Ruff to disable to avoid issues with formatter
     "COM812", "ISC001",

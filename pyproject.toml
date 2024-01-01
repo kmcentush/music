@@ -1,0 +1,118 @@
+[project]
+name = "PLACEHOLDER"
+description = "PLACEHOLDER"
+readme = "README.md"
+authors = [
+    {name = "PLACEHOLDER", email = "PLACEHOLDER@cuberg.net"},
+]
+dynamic = ["version"]
+dependencies = [
+#    "package==1.2.3",
+#    "private-package @ git+https://github.com/organization/repository.git@branch_or_tag"
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy==1.7.1",
+    "nbstripout==0.6.1",
+    "pre-commit==3.6.0",
+    "pytest==7.4.3",
+    "pytest-cov==4.1.0",
+    "ruff==0.1.8",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "PLACEHOLDER.__version__"}
+
+[tool.ruff]
+include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
+line-length = 120
+select = [
+    # pyflakes
+    "F",
+    # pycodestyle
+    "E",
+    "W",
+    # flake8-2020
+    "YTT",
+    # flake8-bugbear
+    "B",
+    # flake8-commas
+    "COM",
+    # flake8-datetimez
+    "DTZ",
+    # flake8-quotes
+    "Q",
+    # pylint
+    "PLE", "PLR", "PLW",
+    # misc lints
+    "PIE",
+    # flake8-pyi
+    "PYI",
+    # tidy imports
+    "TID",
+    # implicit string concatenation
+    "ISC",
+    # type-checking imports
+    "TCH",
+    # isort
+    "I",
+    # comprehensions
+    "C4",
+    # pygrep-hooks
+    "PGH",
+    # Ruff-specific rules
+    "RUF",
+    # Upgrade syntax
+    "UP",
+]
+ignore = [
+    # module level import not at top of file
+    "E402",
+    # too many branches
+    "PLR0912",
+    # too many arguments to function call
+    "PLR0913",
+    # too many statements in function
+    "PLR0915",
+    # magic value used in comparison,
+    "PLR2004",
+    # do not use mutable data structures for argument defaults
+    "B006",
+    # recommended by Ruff to disable to avoid issues with formatter
+    "COM812", "ISC001",
+]
+per-file-ignores = {"__init__.py" = ["F401"]}
+target-version = "py310"
+
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = true
+
+[tool.mypy]
+disable_error_code = "type-var"
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+    ]
+ignore_errors = true
+
+[tool.coverage.run]
+omit = [
+    # Workflows are not tested
+    "*/workflows/*"
+]

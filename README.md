@@ -1,4 +1,4 @@
 # music
 
 Version bumping:
-- Edit `__version__` in `src/<package_name>/__init__.py`
+- Edit `__version__` in `src/music/__init__.py`

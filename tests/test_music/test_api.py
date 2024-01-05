@@ -13,6 +13,10 @@ def client() -> "Spotify":
 
 
 def test_get_artist(client: "Spotify"):
-    artist_ids = ["2CIMQHirSU0MQqyYHq0eOx", "57dN52uHvrHOxijzpIgu3E", "1vCWHaC5f2uS3yhpwWbIA6"]
-    artists = api.get_artists(client, artist_ids)
+    artist_uris = [
+        "spotify:artist:2CIMQHirSU0MQqyYHq0eOx",
+        "spotify:artist:57dN52uHvrHOxijzpIgu3E",
+        "spotify:artist:1vCWHaC5f2uS3yhpwWbIA6",
+    ]
+    artists = api.get_artists(client, artist_uris)
     assert len(artists) == 3

@@ -31,5 +31,9 @@ def _get_general_client() -> Spotify:
 #     )
 
 
-def get_artists(client: Spotify, uris: list[str]) -> list[dict[str, Any]]:
-    return client.artists(uris)["artists"]
+def get_albums(client: Spotify, ids: list[str]) -> list[dict[str, Any]]:
+    return client.albums(ids)["albums"]
+
+
+def get_artists(client: Spotify, ids: list[str]) -> list[dict[str, Any]]:
+    return client.artists(ids)["artists"]

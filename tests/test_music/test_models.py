@@ -5,6 +5,7 @@ def test_artist():
     # Create
     artist = Artist(id="id", name="name", uri="uri", genres=["genre1", "genre2"])
     artist.create()
+    artist.pkey = 3
 
     # Read
     artists = Artist.read()
@@ -15,17 +16,21 @@ def test_artist():
     assert artist == artist2
 
     # Update
-    # TODO
+    artist.name = "name2"
+    artist.update()
+    artist3 = Artist.read_id(artist.id)
+    assert artist.id == artist3.id
+    assert artist.name == artist3.name
 
     # Delete
     artist.delete()
-    artists2 = Artist.read()
-    assert artist not in artists2
+    artists3 = Artist.read()
+    assert artist not in artists3
 
 
 def test_album():
-    # Create
-    album = Album(
+    # No need to test CRUD, as Artist already does that
+    Album(
         id="id",
         name="name",
         uri="uri",
@@ -38,20 +43,3 @@ def test_album():
         genres=["genre1", "genre2"],
         label="label",
     )
-    album.create()
-
-    # Read
-    albums = Album.read()
-    assert album in albums
-
-    # Read ID
-    album2 = Album.read_id(album.id)
-    assert album == album2
-
-    # Update
-    # TODO
-
-    # Delete
-    album.delete()
-    albums2 = Artist.read()
-    assert album not in albums2

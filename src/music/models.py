@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from music.data import get_session
+from sqlalchemy import insert, update
 from sqlmodel import JSON, Column, Field, SQLModel, UniqueConstraint, select
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -15,7 +16,7 @@ def _utc_now() -> datetime:
 class BaseModel(SQLModel):
     __table_args__ = (UniqueConstraint("id"),)
     pkey: int | None = Field(default=None, primary_key=True)
-    id: str
+    id: str = Field(index=True)
     name: str
     uri: str
     create_ts: datetime | None = None
@@ -25,11 +26,19 @@ class BaseModel(SQLModel):
         return type(self) == type(other) and self.id == other.id
 
     def create(self):
-        assert self.pkey is None
-        self.create_ts = _utc_now()
-        self.update_ts = self.create_ts
+        return self.create_many([self])
+
+    @classmethod
+    def create_many(cls, objs: list["Self"]):
+        now = _utc_now()
+        to_insert = []
+        for obj in objs:
+            assert obj.pkey is None
+            obj.create_ts = now
+            obj.update_ts = now
+            to_insert.append(obj.model_dump())
         with get_session() as session:
-            session.add(self)
+            session.execute(insert(cls), to_insert)
             session.commit()
 
     @classmethod
@@ -47,16 +56,28 @@ class BaseModel(SQLModel):
             return results.one()
 
     def update(self):
-        assert self.pkey is not None
-        self.update_ts = _utc_now()
+        return self.update_many([self])
+
+    @classmethod
+    def update_many(cls, objs: list["Self"]):
+        now = _utc_now()
+        to_update = []
+        for obj in objs:
+            assert obj.pkey is not None
+            obj.update_ts = now
+            to_update.append(obj.model_dump())
         with get_session() as session:
-            session.add(self)
+            session.execute(update(cls), to_update)
             session.commit()
 
     def delete(self):
+        cls = self.__class__
         assert self.pkey is not None
         with get_session() as session:
-            session.delete(self)
+            statement = select(cls).where(cls.id == self.id)
+            results = session.exec(statement)
+            obj = results.one()
+            session.delete(obj)
             session.commit()
 
 

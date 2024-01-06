@@ -27,6 +27,7 @@ def test_artist():
     # Read ID
     artist2 = Artist.read_id(artist.id)
     assert artist == artist2
+    artist.pkey = artist2.pkey  # get pkey
 
     # Update
     artist.name = "name2"

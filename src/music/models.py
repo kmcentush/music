@@ -42,9 +42,10 @@ class BaseModel(SQLModel):
             obj.create_ts = now
             obj.update_ts = now
             to_insert.append(obj.model_dump())
-        with get_session() as session:
-            session.execute(insert(cls), to_insert)
-            session.commit()
+        if len(to_insert) > 0:
+            with get_session() as session:
+                session.execute(insert(cls), to_insert)
+                session.commit()
 
     @classmethod
     def read_all(cls) -> list["Self"]:
@@ -74,9 +75,10 @@ class BaseModel(SQLModel):
             assert obj.pkey is not None
             obj.update_ts = now
             to_update.append(obj.model_dump())
-        with get_session() as session:
-            session.execute(update(cls), to_update)
-            session.commit()
+        if len(to_update) > 0:
+            with get_session() as session:
+                session.execute(update(cls), to_update)
+                session.commit()
 
     def delete(self):
         cls = self.__class__

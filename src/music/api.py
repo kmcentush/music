@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from spotipy.cache_handler import CacheFileHandler
@@ -62,21 +63,42 @@ def _handle_chunked_ids(
 
 
 def _handle_next(
-    client: "Spotify", func: "Callable", *args, limit: int | None = None, bar_description: str | None = None, **kwargs
+    client: "Spotify",
+    func: "Callable",
+    *args,
+    limit: int | None = None,
+    bar_description: str | None = None,
+    early_break: "Callable | None" = None,
+    **kwargs,
 ) -> list[dict[str, Any]]:
+    # Get first result
     items = []
+    result = func(*args, **kwargs)
     with tqdm(desc=bar_description, total=limit) as bar:
-        result = func(*args, **kwargs)
+        # Update bar total
         bar.total = min(limit, result["total"]) if limit else result["total"]
+
+        # Handle result
         while result:
+            # Get items and update bar progress
             new_items = result["items"]
             items += new_items
             bar.update(len(new_items))
-            if limit and len(items) >= limit:
+
+            # Maybe break
+            num_items = len(items)
+            if limit is not None and num_items >= limit:
                 bar.n = limit
                 items = items[:limit]
                 break
+            if early_break is not None and early_break(items):
+                bar.total = num_items
+                bar.n = num_items
+                break
+
+            # Get next result
             result = client.next(result) if result["next"] else None
+
         return items
 
 
@@ -109,10 +131,41 @@ def get_user_playlists(client: Spotify, limit: int | None = None) -> list[dict[s
     return _handle_next(client, client.current_user_playlists, limit=limit, bar_description="Getting user playlists")
 
 
-def get_user_saved_tracks(client: Spotify, limit: int | None = None) -> list[dict[str, Any]]:
-    return _handle_next(
-        client, client.current_user_saved_tracks, limit=limit, bar_description="Getting user saved tracks"
+def get_user_saved_tracks(
+    client: Spotify, limit: int | None = None, since: "datetime | None" = None
+) -> list[dict[str, Any]]:
+    # Break early when `since` is specified
+    def early_break(tracks: list[dict[str, Any]]) -> bool:
+        oldest_track = tracks[-1]
+        oldest_dt = datetime.fromisoformat(oldest_track["added_at"].replace("Z", "+00:00"))
+        return oldest_dt < since  # type: ignore[operator]  # function is only called when `since` is not None
+
+    # Get tracks
+    tracks = _handle_next(
+        client,
+        client.current_user_saved_tracks,
+        limit=limit,
+        early_break=early_break if since is not None else None,
+        bar_description="Getting user saved tracks",
     )
+
+    # Maybe filter
+    if since is not None:
+        # Determine what to exclude; since things are ordered newest -> oldest, start from the end
+        keep_through = -1
+        for i in range(1, len(tracks) + 1):
+            track = tracks[-i]
+            track_dt = datetime.fromisoformat(track["added_at"].replace("Z", "+00:00"))
+            if track_dt < since:
+                keep_through -= 1
+            else:  # things are ordered so we can break early
+                break
+
+        # Filter
+        if keep_through < -1:
+            tracks = tracks[0 : keep_through + 1]
+
+    return tracks
 
 
 if __name__ == "__main__":

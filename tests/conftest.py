@@ -1,6 +1,6 @@
 import os
 
-os.environ["TEST"] = "true"
+os.environ["TEST"] = "true"  # mark test before any imports
 
 
 import music.models  # noqa: F401  # import models before creating database

@@ -3,9 +3,11 @@ from typing import TYPE_CHECKING, Any
 
 from music.data import get_session
 from sqlalchemy import insert, update
-from sqlmodel import JSON, Column, Field, SQLModel, UniqueConstraint, select
+from sqlmodel import JSON, Column, Field, SQLModel, UniqueConstraint, col, select
 
 if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Iterable
+
     from typing_extensions import Self
 
 
@@ -22,14 +24,17 @@ class BaseModel(SQLModel):
     create_ts: datetime | None = None
     update_ts: datetime | None = None
 
-    def __eq__(self, other):
+    def __hash__(self) -> int:
+        return hash(f"{type(self)}(id={self.id})")
+
+    def __eq__(self, other) -> bool:
         return type(self) == type(other) and self.id == other.id
 
     def create(self):
         return self.create_many([self])
 
     @classmethod
-    def create_many(cls, objs: list["Self"]):
+    def create_many(cls, objs: "Iterable[Self]"):
         now = _utc_now()
         to_insert = []
         for obj in objs:
@@ -42,24 +47,27 @@ class BaseModel(SQLModel):
             session.commit()
 
     @classmethod
-    def read(cls) -> list["Self"]:
-        with get_session() as session:
-            statement = select(cls)
-            results = session.exec(statement)
-            return list(results)
+    def read_all(cls) -> list["Self"]:
+        return cls.read_many()
 
     @classmethod
     def read_id(cls, id: str) -> "Self":
+        return cls.read_many([id])[0]
+
+    @classmethod
+    def read_many(cls, ids: "Iterable[str] | None" = None) -> list["Self"]:
         with get_session() as session:
-            statement = select(cls).where(cls.id == id)
+            statement = select(cls)
+            if ids is not None:
+                statement = statement.where(col(cls.id).in_(ids))
             results = session.exec(statement)
-            return results.one()
+            return list(results)
 
     def update(self):
         return self.update_many([self])
 
     @classmethod
-    def update_many(cls, objs: list["Self"]):
+    def update_many(cls, objs: "Iterable[Self]"):
         now = _utc_now()
         to_update = []
         for obj in objs:

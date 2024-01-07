@@ -20,8 +20,11 @@ def test_artist():
     # Create
     artist.create()
 
+    # Hash
+    assert {artist}
+
     # Read
-    artists = Artist.read()
+    artists = Artist.read_all()
     assert artist in artists
 
     # Read ID
@@ -37,7 +40,7 @@ def test_artist():
 
     # Delete
     artist.delete()
-    artists3 = Artist.read()
+    artists3 = Artist.read_all()
     assert artist not in artists3
 
 

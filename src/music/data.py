@@ -15,7 +15,7 @@ def _get_engine() -> "Engine":
     return create_engine(db_url, echo=False)  # toggle to enable SQL statement logging
 
 
-def get_session():
+def get_session() -> Session:
     engine = _get_engine()
     return Session(engine, expire_on_commit=False)
 

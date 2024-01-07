@@ -9,6 +9,7 @@ dynamic = ["version"]
 dependencies = [
     "spotipy==2.22.1",
     "sqlmodel==0.0.14",
+    "tqdm==4.66.1",
 ]
 
 [project.optional-dependencies]
@@ -107,3 +108,9 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
     ]
 ignore_errors = true
+
+[tool.coverage.run]
+omit = [
+    # Workflows are not tested
+    "*/workflows/*"
+]

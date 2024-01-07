@@ -12,7 +12,7 @@ def get_tracks(client: "Spotify") -> list[Track]:
     # Get tracks
     tracks_dicts = api.get_user_saved_tracks(client)
 
-    return [Track.from_spotify(t) for t in tracks_dicts]
+    return [Track.from_spotify(t["track"]) for t in tracks_dicts]
 
 
 def main():

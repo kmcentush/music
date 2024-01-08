@@ -1,4 +1,4 @@
-from music.models import Album, Artist, Track
+from music.models import Album, Artist, Features, Track
 
 
 def test_artist():
@@ -105,4 +105,41 @@ def test_track():
         "track_number": 11,
         "duration_ms": 366213,
         "explicit": False,
+    }
+
+
+def test_track_features():
+    # No need to test CRUD; Artist already does that
+
+    # From Spotify
+    features_dict = {
+        "danceability": 0.366,
+        "energy": 0.963,
+        "key": 11,
+        "loudness": -5.301,
+        "mode": 0,
+        "speechiness": 0.142,
+        "acousticness": 0.000273,
+        "instrumentalness": 0.0122,
+        "liveness": 0.115,
+        "valence": 0.211,
+        "tempo": 137.114,
+        "id": "7ouMYWpwJ422jRcDASZB7P",
+        "time_signature": 4,
+    }
+    features = Features.from_spotify(features_dict)
+    assert features.model_dump(exclude={"pkey", "create_ts", "update_ts"}) == {
+        "id": "7ouMYWpwJ422jRcDASZB7P",
+        "acousticness": 0.000273,
+        "danceability": 0.366,
+        "energy": 0.963,
+        "instrumentalness": 0.0122,
+        "key": 11,
+        "liveness": 0.115,
+        "loudness": -5.301,
+        "mode": 0,
+        "speechiness": 0.142,
+        "tempo": 137.114,
+        "time_signature": 4,
+        "valence": 0.211,
     }

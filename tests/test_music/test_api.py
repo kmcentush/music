@@ -56,3 +56,9 @@ def test_get_user_saved_tracks(user_client: "Spotify"):
     since = datetime(year=2024, month=1, day=1, tzinfo=timezone.utc)
     tracks2 = api.get_user_saved_tracks(user_client, since=since)
     assert len(tracks2) > 0
+
+
+def test_get_features(general_client: "Spotify"):
+    track_ids = ["7ouMYWpwJ422jRcDASZB7P", "4VqPOruhp5EdPBeR92t6lQ"]
+    features = api.get_features(general_client, track_ids)
+    assert len(features) == 2

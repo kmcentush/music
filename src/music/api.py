@@ -48,7 +48,7 @@ def _handle_chunked_ids(
     func: "Callable",
     total: int,
     chunked_ids: list[list[str]],
-    key: str,
+    key: str | None = None,
     *args,
     bar_description: str | None = None,
     **kwargs,
@@ -56,7 +56,9 @@ def _handle_chunked_ids(
     items = []
     with tqdm(total=total, desc=bar_description) as bar:
         for ids in chunked_ids:
-            new_items = func(ids, *args, **kwargs)[key]
+            new_items = func(ids, *args, **kwargs)
+            if key is not None:
+                new_items = new_items[key]
             items += new_items
             bar.update(len(new_items))
     return items
@@ -166,6 +168,13 @@ def get_user_saved_tracks(
             tracks = tracks[0 : keep_through + 1]
 
     return tracks
+
+
+def get_features(client: Spotify, ids: "Collection[str]") -> list[dict[str, Any]]:
+    chunked_ids = _chunk_list(ids, chunk_size=100)  # limit per call; from Spotify documentation
+    return _handle_chunked_ids(
+        client.audio_features, total=len(ids), chunked_ids=chunked_ids, bar_description="Getting features"
+    )
 
 
 if __name__ == "__main__":

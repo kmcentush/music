@@ -19,8 +19,6 @@ class BaseModel(SQLModel):
     __table_args__ = (UniqueConstraint("id"),)
     pkey: int | None = Field(default=None, primary_key=True)
     id: str = Field(index=True)
-    name: str
-    uri: str
     create_ts: datetime | None = None
     update_ts: datetime | None = None
 
@@ -91,7 +89,12 @@ class BaseModel(SQLModel):
             session.commit()
 
 
-class Album(BaseModel, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Named(BaseModel):
+    name: str
+    uri: str
+
+
+class Album(Named, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
     album_type: str
     total_tracks: int
     release_date: str
@@ -108,7 +111,7 @@ class Album(BaseModel, table=True):  # type: ignore[call-arg]  # this started ha
         return cls(**item)
 
 
-class Artist(BaseModel, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Artist(Named, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
     genres: list[str] = Field(sa_column=Column(JSON))
 
     @classmethod
@@ -116,7 +119,7 @@ class Artist(BaseModel, table=True):  # type: ignore[call-arg]  # this started h
         return cls(**item)
 
 
-class Track(BaseModel, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Track(Named, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
     album_id: str
     artist_ids: list[str] = Field(sa_column=Column(JSON))
     disc_number: int
@@ -128,4 +131,23 @@ class Track(BaseModel, table=True):  # type: ignore[call-arg]  # this started ha
     def from_spotify(cls, item: dict[str, Any]) -> "Self":
         item["album_id"] = item["album"]["id"]
         item["artist_ids"] = [a["id"] for a in item["artists"]]
+        return cls(**item)
+
+
+class Features(BaseModel, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+    acousticness: float
+    danceability: float
+    energy: float
+    instrumentalness: float
+    key: int
+    liveness: float
+    loudness: float
+    mode: int
+    speechiness: float
+    tempo: float
+    time_signature: int
+    valence: float
+
+    @classmethod
+    def from_spotify(cls, item: dict[str, Any]) -> "Self":
         return cls(**item)

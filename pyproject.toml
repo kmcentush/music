@@ -7,7 +7,7 @@ authors = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "jupyterlab==4.0.10",
+    "jupyterlab==4.1.0",
     "plotly==5.18.0",
     "pandas==2.1.4",  # required for Plotly Express
     "polars==0.20.3",

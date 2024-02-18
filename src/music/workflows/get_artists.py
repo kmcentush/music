@@ -1,3 +1,5 @@
+import functools
+import operator
 from typing import TYPE_CHECKING
 
 from music import api
@@ -20,7 +22,7 @@ def main():
 
     # Get tracks and artist IDs
     tracks = Track.read_many()
-    artist_ids = set(sum([t.artist_ids for t in tracks], []))
+    artist_ids = set(functools.reduce(operator.iadd, [t.artist_ids for t in tracks], []))
 
     # Get existing artists
     existing_artists = Artist.read_many()

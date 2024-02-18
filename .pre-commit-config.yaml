@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.1.11'
+    rev: 'v0.2.2'
     hooks:
       - id: ruff-format
         args:
@@ -23,7 +23,7 @@ repos:
         files: .
         language_version: python3.10
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.6.1
+    rev: 0.7.1
     hooks:
       - id: nbstripout
         files: .

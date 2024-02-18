@@ -1,12 +1,16 @@
 .PHONY: install
 install:
 	python -m pip install --upgrade pip
-	pip install -e . --upgrade --upgrade-strategy eager
+	pip install uv
+	uv pip install --upgrade uv
+	uv pip install --upgrade -e .
 
 .PHONY: dev_install
 dev_install:
 	python -m pip install --upgrade pip
-	pip install -e .[dev] --upgrade --upgrade-strategy eager
+	pip install uv
+	uv pip install --upgrade uv
+	uv pip install --upgrade -e .[dev]
 	pre-commit install
 
 .PHONY: format

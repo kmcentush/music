@@ -7,24 +7,24 @@ authors = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "jupyterlab==4.0.10",
-    "plotly==5.18.0",
-    "pandas==2.1.4",  # required for Plotly Express
-    "polars==0.20.3",
-    "scikit-learn==1.3.2",
-    "spotipy==2.22.1",
-    "sqlmodel==0.0.14",
-    "tqdm==4.66.1",
+    "jupyterlab",
+    "plotly",
+    "pandas",  # required for Plotly Express
+    "polars",
+    "scikit-learn",
+    "spotipy",
+    "sqlmodel",
+    "tqdm",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "mypy==1.8.0",
-    "nbstripout==0.6.1",
-    "pre-commit==3.6.0",
-    "pytest==7.4.4",
-    "pytest-cov==4.1.0",
-    "ruff==0.1.11",
+    "mypy",
+    "nbstripout",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "ruff",
 ]
 
 [tool.setuptools.dynamic]
@@ -33,6 +33,9 @@ version = {attr = "music.__version__"}
 [tool.ruff]
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
 line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
 select = [
     # pyflakes
     "F",
@@ -89,10 +92,12 @@ ignore = [
     "COM812", "ISC001",
 ]
 per-file-ignores = {"__init__.py" = ["F401"]}
-target-version = "py310"
 
 [tool.ruff.lint.flake8-type-checking]
 quote-annotations = true
+
+[tool.mypy]
+exclude = ['venv', '.venv']
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration

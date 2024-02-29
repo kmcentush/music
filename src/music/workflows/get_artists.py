@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from spotipy.client import Spotify
 
 
-def get_artists(client: "Spotify", ids: set[str]) -> list[Track]:
+def get_artists(client: "Spotify", ids: set[str]) -> list[Artist]:
     # Get artists
     artists_dicts = api.get_artists(client, ids)
 

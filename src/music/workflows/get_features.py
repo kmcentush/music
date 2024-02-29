@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from spotipy.client import Spotify
 
 
-def get_features(client: "Spotify", ids: set[str]) -> list[Track]:
+def get_features(client: "Spotify", ids: set[str]) -> list[Features]:
     # Get features
     features_dicts = api.get_features(client, ids)
 

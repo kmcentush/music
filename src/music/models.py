@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from music.data import get_session
 from sqlalchemy import insert, update
 from sqlmodel import JSON, Column, Field, SQLModel, UniqueConstraint, col, select
+
+from music.data import get_session
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterable
@@ -94,7 +95,7 @@ class Named(BaseModel):
     uri: str
 
 
-class Album(Named, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Album(Named, table=True):
     album_type: str
     total_tracks: int
     release_date: str
@@ -111,7 +112,7 @@ class Album(Named, table=True):  # type: ignore[call-arg]  # this started happen
         return cls(**item)
 
 
-class Artist(Named, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Artist(Named, table=True):
     genres: list[str] = Field(sa_column=Column(JSON))
 
     @classmethod
@@ -119,7 +120,7 @@ class Artist(Named, table=True):  # type: ignore[call-arg]  # this started happe
         return cls(**item)
 
 
-class Track(Named, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Track(Named, table=True):
     album_id: str
     artist_ids: list[str] = Field(sa_column=Column(JSON))
     disc_number: int
@@ -134,7 +135,7 @@ class Track(Named, table=True):  # type: ignore[call-arg]  # this started happen
         return cls(**item)
 
 
-class Features(BaseModel, table=True):  # type: ignore[call-arg]  # this started happening in SQLModel 0.0.14: https://github.com/tiangolo/sqlmodel/discussions/732
+class Features(BaseModel, table=True):
     acousticness: float
     danceability: float
     energy: float

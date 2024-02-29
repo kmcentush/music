@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from spotipy.client import Spotify
 
 
-def get_albums(client: "Spotify", ids: set[str]) -> list[Track]:
+def get_albums(client: "Spotify", ids: set[str]) -> list[Album]:
     # Get albums
     albums_dicts = api.get_albums(client, ids)
 

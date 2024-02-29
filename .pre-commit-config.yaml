@@ -21,6 +21,9 @@ repos:
           - '--ignore-missing-imports'
           - '--non-interactive'
         files: .
+        additional_dependencies:
+          - 'pydantic==v2.6.3'
+          - 'sqlmodel==0.0.16'
         language_version: python3.10
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1

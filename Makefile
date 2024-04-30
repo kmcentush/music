@@ -2,14 +2,14 @@
 install:
 	python -m pip install --upgrade pip
 	pip install uv
-	uv pip install --upgrade uv
+	pip install --upgrade uv
 	uv pip install --upgrade -e .
 
 .PHONY: dev_install
 dev_install:
 	python -m pip install --upgrade pip
 	pip install uv
-	uv pip install --upgrade uv
+	pip install --upgrade uv
 	uv pip install --upgrade -e .[dev]
 	pre-commit install
 

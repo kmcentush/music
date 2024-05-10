@@ -6,7 +6,7 @@ from sqlmodel import JSON, Column, Field, SQLModel, UniqueConstraint, col, selec
 
 from music.data import get_session
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from typing_extensions import Self

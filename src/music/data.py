@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import Session, SQLModel, create_engine
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
 

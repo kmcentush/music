@@ -14,7 +14,9 @@ dependencies = [
     "scikit-learn",
     "spotipy",
     "sqlmodel",
+    "torch",
     "tqdm",
+    "umap-learn",
 ]
 
 [project.optional-dependencies]
@@ -116,6 +118,9 @@ exclude_also = [
 
     # Don't complain about abstract methods, they aren't run:
     "@(abc\\.)?abstractmethod",
+
+    # Skip type checks
+    "if TYPE_CHECKING:"
     ]
 ignore_errors = true
 

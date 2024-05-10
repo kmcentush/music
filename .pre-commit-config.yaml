@@ -23,7 +23,7 @@ repos:
         files: .
         additional_dependencies:
           - 'pydantic==v2.7.1'
-          - 'sqlmodel==0.0.17'
+          - 'sqlmodel==0.0.18'
         language_version: python3.10
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1

@@ -7,6 +7,8 @@ authors = [
 ]
 dynamic = ["version"]
 dependencies = [
+    "catboost",
+    "ipywidgets",  # required for Jupyter Lab TQDM
     "jupyterlab",
     "plotly",
     "pandas",  # required for Plotly Express

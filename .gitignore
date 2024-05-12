@@ -163,3 +163,4 @@ cython_debug/
 *.db
 *.cache
 *.parquet
+catboost_info/

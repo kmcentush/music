@@ -28,20 +28,36 @@ def test_artist():
     assert artist in artists
 
     # Read ID
-    artist2 = Artist.read_id(artist.id)
-    assert artist == artist2
-    artist.pkey = artist2.pkey  # get pkey
+    read_artist = Artist.read_id(artist.id)
+    assert artist == read_artist
+    artist.pkey = read_artist.pkey  # get pkey
 
     # Update
     artist.name = "name2"
     artist.update()
-    artist3 = Artist.read_id(artist.id)
-    assert artist.name == artist3.name
+    read_artist2 = Artist.read_id(artist.id)
+    assert artist.name == read_artist2.name
+
+    # Spoof new artist
+    artist2 = artist.model_copy()
+    artist2.pkey = None
+    artist2.id = "new_artist"
+
+    # Upsert
+    artist.upsert()
+    artist2.upsert()
+    artists2 = Artist.read_all()
+    assert artist in artists2
+    assert artist2 in artists2
+    read_artist3 = Artist.read_id(artist2.id)
+    artist2.pkey = read_artist3.pkey  # get pkey
 
     # Delete
     artist.delete()
+    artist2.delete()
     artists3 = Artist.read_all()
     assert artist not in artists3
+    assert artist2 not in artists3
 
 
 def test_album():

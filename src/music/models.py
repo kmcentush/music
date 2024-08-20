@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import JSON, TIMESTAMP, insert, text, update
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlmodel import Field, SQLModel, col, select
 
 from music.data import get_session
@@ -43,7 +44,7 @@ class BaseModel(SQLModel):
         return hash(f"{type(self)}(id={self.id})")
 
     def __eq__(self, other) -> bool:
-        return type(self) == type(other) and self.id == other.id
+        return type(self) is type(other) and self.id == other.id
 
     def create(self):
         return self.create_many([self])
@@ -136,6 +137,22 @@ class BaseModel(SQLModel):
                     to_update.append(o)
             cls.create_many(to_create)
             cls.update_many(to_update)
+        elif dialect == "postgresql":
+            now = _utc_now()
+            to_upsert = []
+            for obj in objs:
+                obj.create_ts = now  # will be ignored by `ON CONFLICT DO` because of `UPSERT_SKIP_COLS`
+                obj.update_ts = now
+                to_upsert.append(obj.model_dump())
+            if len(to_upsert) > 0:
+                with get_session() as session:
+                    sql = pg_insert(cls)
+                    sql = sql.on_conflict_do_update(
+                        index_elements=["id"],
+                        set_={k: v for k, v in sql.excluded.items() if k not in UPSERT_SKIP_COLS},
+                    )
+                    session.exec(sql, params=to_upsert)  # type: ignore[call-overload]
+                    session.commit()
         else:  # pragma: no cover
             raise ValueError(f"Dialect {dialect} not understood.")
 

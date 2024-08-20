@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 import pytest
+
 from music import api
 
 if TYPE_CHECKING:

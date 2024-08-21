@@ -3,7 +3,7 @@ name = "music"
 description = ""
 readme = "README.md"
 authors = [
-    {name = "Kyle McEntush", email = "kdmcentush@gmail.com"},
+    {name = "Kyle McEntush"},
 ]
 dynamic = ["version"]
 dependencies = [

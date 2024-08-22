@@ -23,9 +23,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "mypy",
     "nbstripout",
     "pre-commit",
+    "pyright",
     "pytest",
     "pytest-cov",
     "ruff",
@@ -100,8 +100,9 @@ per-file-ignores = {"__init__.py" = ["F401"]}
 [tool.ruff.lint.flake8-type-checking]
 quote-annotations = true
 
-[tool.mypy]
-exclude = ['venv', '.venv']
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration

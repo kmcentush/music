@@ -25,7 +25,7 @@ class BaseModel(SQLModel):
     id: str = Field(index=True, unique=True)
     create_ts: datetime = Field(
         default_factory=_utc_now,
-        sa_type=TIMESTAMP(timezone=True),  # type: ignore[call-overload]
+        sa_type=TIMESTAMP(timezone=True),  # type: ignore[reportArgumentType]
         sa_column_kwargs={
             "server_default": text("CURRENT_TIMESTAMP"),
         },
@@ -33,7 +33,7 @@ class BaseModel(SQLModel):
     )
     update_ts: datetime = Field(
         default_factory=_utc_now,
-        sa_type=TIMESTAMP(timezone=True),  # type: ignore[call-overload]
+        sa_type=TIMESTAMP(timezone=True),  # type: ignore[reportArgumentType]
         sa_column_kwargs={
             "server_default": text("CURRENT_TIMESTAMP"),
         },
@@ -113,7 +113,7 @@ class BaseModel(SQLModel):
     def upsert_many(cls, objs: "Iterable[Self]"):
         # Get dialect
         with get_session() as session:
-            dialect = session.bind.dialect.name  # type: ignore[union-attr]
+            dialect = session.bind.dialect.name  # type: ignore[reportOptionalMemberAccess]
 
         # Handle different dialects
         if dialect == "sqlite":
@@ -137,7 +137,7 @@ class BaseModel(SQLModel):
                     to_update.append(o)
             cls.create_many(to_create)
             cls.update_many(to_update)
-        elif dialect == "postgresql":
+        elif dialect == "postgresql":  # pragma: no cover
             now = _utc_now()
             to_upsert = []
             for obj in objs:
@@ -151,7 +151,7 @@ class BaseModel(SQLModel):
                         index_elements=["id"],
                         set_={k: v for k, v in sql.excluded.items() if k not in UPSERT_SKIP_COLS},
                     )
-                    session.exec(sql, params=to_upsert)  # type: ignore[call-overload]
+                    session.exec(sql, params=to_upsert)  # type: ignore[reportCallIssue,reportArgumentType]
                     session.commit()
         else:  # pragma: no cover
             raise ValueError(f"Dialect {dialect} not understood.")

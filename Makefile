@@ -4,7 +4,6 @@ install:
 
 .PHONY: dev_install
 dev_install:
-	uv pip install --upgrade pip
 	uv pip install --upgrade -e .[dev]
 	pre-commit install
 
@@ -12,13 +11,13 @@ dev_install:
 format:
 	ruff format .
 	ruff check . --fix
-	mypy . --install-types --ignore-missing-imports
+	pyright .
 
 .PHONY: test_format
 test_format:
 	ruff format . --check
 	ruff check .
-	mypy . --install-types --ignore-missing-imports
+	pyright .
 
 .PHONY: pytest
 pytest:

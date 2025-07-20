@@ -38,7 +38,7 @@ def get_user_client(open_browser: bool = False) -> Spotify:
         auth_manager=SpotifyOAuth(
             scope=SCOPES,
             cache_handler=CacheFileHandler(cache_path=USER_CACHE_PATH),
-            redirect_uri="http://localhost:8501/callback",
+            redirect_uri="http://127.0.0.1:8501/callback",
             open_browser=open_browser,
         )
     )
@@ -140,7 +140,7 @@ def get_user_saved_tracks(
     def early_break(tracks: list[dict[str, Any]]) -> bool:
         oldest_track = tracks[-1]
         oldest_dt = datetime.fromisoformat(oldest_track["added_at"].replace("Z", "+00:00"))
-        return oldest_dt < since  # type: ignore[reportOperatorIssue]  # function only called when `since` is not None
+        return oldest_dt < since  # function only called when `since` is not None
 
     # Get tracks
     tracks = _handle_next(

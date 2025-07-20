@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 def _get_engine() -> "Engine":
-    db_file = "test_data.db" if os.getenv("TEST", None) is not None else "data.db"
+    db_file = "test_data.db" if os.getenv("PYTEST_VERSION", None) is not None else "data.db"
     parent_dir = os.path.dirname(os.path.realpath(__file__))
     db_path = os.path.abspath(os.path.join(parent_dir, "..", "..", db_file))
     db_url = f"sqlite:///{db_path}"

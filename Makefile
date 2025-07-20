@@ -1,24 +1,24 @@
 .PHONY: install
 install:
-	uv pip install --upgrade -e .
+	uv sync --no-group dev
+	uv pip install -e . --no-deps
 
 .PHONY: dev_install
 dev_install:
-	uv pip install --upgrade -e .[dev]
+	uv sync
+	uv pip install -e . --no-deps
 	pre-commit install
+
+.PHONY: compile
+compile:
+	uv lock
 
 .PHONY: format
 format:
-	ruff format .
 	ruff check . --fix
-	pyright .
+	ruff format .
+	ty check .
 
-.PHONY: test_format
-test_format:
-	ruff format . --check
-	ruff check .
-	pyright .
-
-.PHONY: pytest
-pytest:
+.PHONY: test
+test:
 	pytest --cov-report term-missing --cov=src tests/ -s

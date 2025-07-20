@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import JSON, TIMESTAMP, insert, text, update
@@ -9,15 +9,14 @@ from music.data import get_session
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-
-    from typing_extensions import Self
+    from typing import Self
 
 # Define constants
 UPSERT_SKIP_COLS = {"id", "create_ts"}
 
 
 def _utc_now() -> datetime:
-    return datetime.now(tz=timezone.utc)
+    return datetime.now(tz=UTC)
 
 
 class BaseModel(SQLModel):
@@ -25,7 +24,7 @@ class BaseModel(SQLModel):
     id: str = Field(index=True, unique=True)
     create_ts: datetime = Field(
         default_factory=_utc_now,
-        sa_type=TIMESTAMP(timezone=True),  # type: ignore[reportArgumentType]
+        sa_type=TIMESTAMP(timezone=True),  # type: ignore[invalid-argument-type]
         sa_column_kwargs={
             "server_default": text("CURRENT_TIMESTAMP"),
         },
@@ -33,7 +32,7 @@ class BaseModel(SQLModel):
     )
     update_ts: datetime = Field(
         default_factory=_utc_now,
-        sa_type=TIMESTAMP(timezone=True),  # type: ignore[reportArgumentType]
+        sa_type=TIMESTAMP(timezone=True),  # type: ignore[invalid-argument-type]
         sa_column_kwargs={
             "server_default": text("CURRENT_TIMESTAMP"),
         },
@@ -113,7 +112,7 @@ class BaseModel(SQLModel):
     def upsert_many(cls, objs: "Iterable[Self]"):
         # Get dialect
         with get_session() as session:
-            dialect = session.bind.dialect.name  # type: ignore[reportOptionalMemberAccess]
+            dialect = session.bind.dialect.name  # type: ignore[possibly-unbound-attribute]
 
         # Handle different dialects
         if dialect == "sqlite":
@@ -151,7 +150,7 @@ class BaseModel(SQLModel):
                         index_elements=["id"],
                         set_={k: v for k, v in sql.excluded.items() if k not in UPSERT_SKIP_COLS},
                     )
-                    session.exec(sql, params=to_upsert)  # type: ignore[reportCallIssue,reportArgumentType]
+                    session.exec(sql, params=to_upsert)
                     session.commit()
         else:  # pragma: no cover
             raise ValueError(f"Dialect {dialect} not understood.")

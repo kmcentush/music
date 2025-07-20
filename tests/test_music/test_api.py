@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 import pytest
@@ -53,9 +53,9 @@ def test_get_user_saved_tracks(user_client: "Spotify"):
     tracks = api.get_user_saved_tracks(user_client, limit=32)
     assert len(tracks) == 32
 
-    # Since
-    since = datetime(year=2024, month=1, day=1, tzinfo=timezone.utc)
-    tracks2 = api.get_user_saved_tracks(user_client, since=since)
+    # Since; still putting `limit` to reduce run time
+    since = datetime(year=2000, month=1, day=1, tzinfo=UTC)
+    tracks2 = api.get_user_saved_tracks(user_client, since=since, limit=32)
     assert len(tracks2) > 0
 
 

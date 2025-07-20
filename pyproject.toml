@@ -6,12 +6,12 @@ authors = [
     {name = "Kyle McEntush"},
 ]
 dynamic = ["version"]
+requires-python = ">= 3.13"
 dependencies = [
     "catboost",
     "ipywidgets",  # required for Jupyter Lab TQDM
     "jupyterlab",
     "plotly",
-    "pandas",  # required for Plotly Express
     "polars",
     "scikit-learn",
     "spotipy",
@@ -21,14 +21,14 @@ dependencies = [
     "umap-learn",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "nbstripout",
     "pre-commit",
-    "pyright",
     "pytest",
     "pytest-cov",
     "ruff",
+    "ty",
 ]
 
 [tool.setuptools.dynamic]
@@ -37,7 +37,7 @@ version = {attr = "music.__version__"}
 [tool.ruff]
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
 line-length = 120
-target-version = "py310"
+target-version = "py313"
 
 [tool.ruff.lint]
 select = [
@@ -100,10 +100,6 @@ per-file-ignores = {"__init__.py" = ["F401"]}
 [tool.ruff.lint.flake8-type-checking]
 quote-annotations = true
 
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
-
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
 exclude_also = [
@@ -124,7 +120,7 @@ exclude_also = [
 
     # Skip type checks
     "if TYPE_CHECKING:"
-    ]
+]
 ignore_errors = true
 
 [tool.coverage.run]

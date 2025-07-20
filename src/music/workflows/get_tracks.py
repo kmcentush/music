@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from music import api
@@ -20,7 +20,7 @@ def main():
     client = api.get_user_client()
 
     # Get tracks since specified date
-    since = datetime(year=2024, month=1, day=1, tzinfo=timezone.utc)
+    since = datetime(year=2024, month=1, day=1, tzinfo=UTC)
     tracks = get_tracks(client, since)
 
     # Save new tracks

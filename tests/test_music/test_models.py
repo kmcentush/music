@@ -21,7 +21,7 @@ def test_artist():
     artist.create()
 
     # Hash
-    assert {artist}  # type: ignore[reportUnhashable]
+    assert {artist}
 
     # Read
     artists = Artist.read_all()
